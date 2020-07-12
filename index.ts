@@ -1,11 +1,6 @@
 export const random = (i: number) => Math.random().toString(16).substr(2, i)
 export const genUUID = () => `${random(8)}-${random(4)}-${random(4)}-${random(4)}-${random(12)}`
 
-export const assign = Object.assign || ((a: any, b: any) => {
-  for (const k in b) a[k] = b[k]
-  return a
-})
-
 export interface GAAllParameters {
   [key: string]: string | number | boolean | undefined | string[]
 
@@ -87,7 +82,7 @@ export default class GoogleAnalytics implements IGoogleAnalytics {
 
   public genSearchParams (data: GAParameters) {
     const body = new URLSearchParams()
-    const d = assign(assign({}, this.defaultValues), data)
+    const d = { ...this.defaultValues, ...data }
     for (const key in d) {
       let value = d[key]
       if (key.startsWith('cg')) {
@@ -126,34 +121,18 @@ export default class GoogleAnalytics implements IGoogleAnalytics {
 
   public pageView (dl: string | null | undefined, dh?: string, dp?: string, other?: GAParameters) {
     if (dl == null) dl = undefined
-    return this.post(assign(other || { }, {
-      dl,
-      dh,
-      dp
-    }))
+    return this.post({ ...other, dl, dh, dp })
   }
 
   public event (ec: string, ea: string, el?: string, ev?: number, other?: GAParameters) {
-    return this.post(assign(other || { }, {
-      ec,
-      ea,
-      el,
-      ev
-    }))
+    return this.post({ ...other, ec, ea, el, ev })
   }
 
   public exception (exd?: string, exf?: boolean, other?: GAParameters) {
-    return this.post(assign(other || { }, {
-      exd,
-      exf
-    }))
+    return this.post({ ...other, exd, exf })
   }
 
   public social (sn: string, sa: string, st: string, other?: GAParameters) {
-    return this.post(assign(other || { }, {
-      sn,
-      sa,
-      st
-    }))
+    return this.post({ ...other, sn, sa, st })
   }
 }

@@ -63,7 +63,7 @@ export type GAParameters = Omit<GAAllParameters, 'v' | 'tid' | 'cid'>
  * https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
  */
 export default class GoogleAnalytics {
-  public defaultValues: GAAllParameters
+  defaultValues: GAAllParameters
   private readonly fetch: typeof fetch
 
   constructor(
@@ -76,7 +76,7 @@ export default class GoogleAnalytics {
     this.defaultValues = { v: 1, tid, cid }
   }
 
-  public genSearchParams(data: GAParameters) {
+  genSearchParams(data: GAParameters) {
     const body = new URLSearchParams()
     const d = { ...this.defaultValues, ...data }
     for (const key in d) {
@@ -102,7 +102,7 @@ export default class GoogleAnalytics {
     return body
   }
 
-  public post(data: GAParameters) {
+  post(data: GAParameters) {
     return this.fetch(this.root, {
       method: 'POST',
       cache: 'no-cache',
@@ -116,21 +116,21 @@ export default class GoogleAnalytics {
     )
   }
 
-  public pageView(
+  pageView(
     dl: null | undefined,
     dh: string,
     dp: string,
     other?: GAParameters
   ): Promise<boolean>
 
-  public pageView(
+  pageView(
     dl: string,
     dh?: string,
     dp?: string,
     other?: GAParameters
   ): Promise<boolean>
 
-  public pageView(
+  pageView(
     dl: string | null | undefined,
     dh?: string,
     dp?: string,
@@ -140,7 +140,7 @@ export default class GoogleAnalytics {
     return this.post({ ...other, dl, dh, dp })
   }
 
-  public event(
+  event(
     ec: string,
     ea: string,
     el?: string,
@@ -150,11 +150,11 @@ export default class GoogleAnalytics {
     return this.post({ ...other, ec, ea, el, ev })
   }
 
-  public exception(exd?: string, exf?: boolean, other?: GAParameters) {
+  exception(exd?: string, exf?: boolean, other?: GAParameters) {
     return this.post({ ...other, exd, exf })
   }
 
-  public social(sn: string, sa: string, st: string, other?: GAParameters) {
+  social(sn: string, sa: string, st: string, other?: GAParameters) {
     return this.post({ ...other, sn, sa, st })
   }
 }

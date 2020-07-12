@@ -16,3 +16,4 @@ Fork of [google-analytics-lite](https://github.com/ShirasawaSama/google-analytic
     - Moved the `baseURL` property to `opts.baseURL`
     - Renamed the `defaultValues` property to `params`
     - Removed the `GAAllParameters` type
+  - Use `@lukeed/uuid` for speed and code reuse [(72fd64a)](https://github.com/aleclarson/ga-lite/commit/72fd64ae61c4456db452df83f65807b2cdab51eb)

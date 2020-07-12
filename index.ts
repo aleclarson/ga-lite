@@ -84,47 +84,6 @@ export class GoogleAnalytics {
     }
   }
 
-  genSearchParams(data: GAParameters) {
-    const body = new URLSearchParams()
-    const d = { ...this.params, ...data }
-
-    for (const key in d) {
-      let value = d[key]
-
-      if (key.startsWith('cg')) {
-        value = Array.isArray(value) ? value.join('/') : undefined
-      }
-
-      switch (typeof value) {
-        case 'boolean':
-          body.append(key, (+value).toString())
-          break
-        case 'string':
-          body.append(key, encodeURIComponent(value))
-          break
-        case 'number':
-          body.append(key, value.toString())
-      }
-    }
-    return body
-  }
-
-  post(data: GAParameters) {
-    const { fetch, baseURL } = this.opts
-
-    return fetch(baseURL, {
-      method: 'POST',
-      cache: 'no-cache',
-      body: this.genSearchParams(data).toString().replace(/%25/g, '%'),
-    }).then(
-      (it) => it.ok,
-      (e) => {
-        console.error(e)
-        return false
-      }
-    )
-  }
-
   pageView(
     dl: null | undefined,
     dh: string,
@@ -187,5 +146,46 @@ export class GoogleAnalytics {
 
   social(sn: string, sa: string, st: string, other?: GAParameters) {
     return this.post({ ...other, sn, sa, st })
+  }
+
+  post(data: GAParameters) {
+    const { fetch, baseURL } = this.opts
+
+    return fetch(baseURL, {
+      method: 'POST',
+      cache: 'no-cache',
+      body: this.genSearchParams(data).toString().replace(/%25/g, '%'),
+    }).then(
+      (it) => it.ok,
+      (e) => {
+        console.error(e)
+        return false
+      }
+    )
+  }
+
+  genSearchParams(data: GAParameters) {
+    const body = new URLSearchParams()
+    const d = { ...this.params, ...data }
+
+    for (const key in d) {
+      let value = d[key]
+
+      if (key.startsWith('cg')) {
+        value = Array.isArray(value) ? value.join('/') : undefined
+      }
+
+      switch (typeof value) {
+        case 'boolean':
+          body.append(key, (+value).toString())
+          break
+        case 'string':
+          body.append(key, encodeURIComponent(value))
+          break
+        case 'number':
+          body.append(key, value.toString())
+      }
+    }
+    return body
   }
 }

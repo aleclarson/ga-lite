@@ -72,14 +72,18 @@ export class GoogleAnalytics {
     readonly cid: string
   }
 
-  constructor(tid: string, cid = genUUID(), opts: GAOptions = {}) {
+  constructor(tid: string, opts: GAOptions = {}) {
     const {
       baseURL = 'https://www.google-analytics.com/collect',
       fetch = globalThis.fetch,
     } = opts
 
     this.opts = { baseURL, fetch }
-    this.params = { v: 1, tid, cid }
+    this.params = {
+      v: 1,
+      tid,
+      cid: genUUID(),
+    }
   }
 
   genSearchParams(data: GAParameters) {

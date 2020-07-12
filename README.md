@@ -4,6 +4,10 @@ Fork of [google-analytics-lite](https://github.com/ShirasawaSama/google-analytic
 
 ## Changelog
 
+- **0.2.2**
+  - Stop using `URLSearchParams` for React Native compatibility [(b443793)](https://github.com/aleclarson/ga-lite/commit/b44379382a98f58b5468e56d35d074b4da2cb6db)
+  - Add `shouldSend` option to constructor [(39579e7)](https://github.com/aleclarson/ga-lite/commit/39579e7623782a60bb6678d43a2163f23b1c48b3)
+  - Make it easier to pass `GAParameters` to `event` method [(3b9965e)](https://github.com/aleclarson/ga-lite/commit/3b9965efbf301af00ae9363ffe0f854e28445baf)
 - **0.2.1**
   - Use `tslib` for code reuse [(62a9d8c)](https://github.com/aleclarson/ga-lite/commit/62a9d8cc5b1c6f018b5391dbcb9a247c8920b58d)
 - **0.2.0**

@@ -155,7 +155,29 @@ export class GoogleAnalytics {
     el?: string,
     ev?: number,
     other?: GAParameters
+  ): Promise<boolean>
+
+  event(
+    ec: string,
+    ea: string,
+    el?: string,
+    other?: GAParameters
+  ): Promise<boolean>
+
+  event(ec: string, ea: string, other?: GAParameters): Promise<boolean>
+
+  event(
+    ec: string,
+    ea: string,
+    el?: string | GAParameters,
+    ev?: number | GAParameters,
+    other?: GAParameters
   ) {
+    if (el && typeof el !== 'string') {
+      ev = el = void (other = el)
+    } else if (ev && typeof ev !== 'number') {
+      ev = void (other = ev)
+    }
     return this.post({ ...other, ec, ea, el, ev })
   }
 

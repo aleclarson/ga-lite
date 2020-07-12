@@ -152,6 +152,7 @@ export class GoogleAnalytics {
 
   post(data: GAParameters) {
     const { fetch, baseURL, shouldSend } = this.opts
+    data = { ...this.params, ...data }
 
     return Promise.resolve()
       .then(() => shouldSend(data))
@@ -161,7 +162,7 @@ export class GoogleAnalytics {
           fetch(baseURL, {
             method: 'POST',
             cache: 'no-cache',
-            body: this.genSearchParams(data).toString().replace(/%25/g, '%'),
+            body: encodeSearchParams(data),
           }).then(
             (res) => res.ok,
             (e) => {
@@ -171,29 +172,31 @@ export class GoogleAnalytics {
           )
       )
   }
+}
 
-  genSearchParams(data: GAParameters) {
-    const body = new URLSearchParams()
-    const d = { ...this.params, ...data }
+function encodeSearchParams(params: GAParameters) {
+  let result = ''
 
-    for (const key in d) {
-      let value = d[key]
-
-      if (key.startsWith('cg')) {
-        value = Array.isArray(value) ? value.join('/') : undefined
-      }
-
-      switch (typeof value) {
-        case 'boolean':
-          body.append(key, (+value).toString())
-          break
-        case 'string':
-          body.append(key, encodeURIComponent(value))
-          break
-        case 'number':
-          body.append(key, value.toString())
-      }
+  for (const key in params) {
+    let value: any = params[key]
+    if (/^cg[1-5]$/.test(key) && Array.isArray(value)) {
+      value = value.join('/')
     }
-    return body
+
+    const type = typeof value
+    value =
+      type == 'boolean'
+        ? +value
+        : type == 'string'
+        ? encodeURIComponent(value)
+        : type == 'number'
+        ? value
+        : ''
+
+    if (value !== '') {
+      result += (result ? '&' : '') + encodeURIComponent(key) + '=' + value
+    }
   }
+
+  return result
 }

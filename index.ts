@@ -59,25 +59,10 @@ export interface GAAllParameters {
 }
 export type GAParameters = Omit<GAAllParameters, 'v' | 'tid' | 'cid'>
 
-interface IGoogleAnalytics {
-  pageView(
-    dl: null | undefined,
-    dh: string,
-    dp: string,
-    other?: GAParameters
-  ): Promise<boolean>
-  pageView(
-    dl: string,
-    dh?: string,
-    dp?: string,
-    other?: GAParameters
-  ): Promise<boolean>
-}
-
 /**
  * https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
  */
-export default class GoogleAnalytics implements IGoogleAnalytics {
+export default class GoogleAnalytics {
   public defaultValues: GAAllParameters
   private readonly fetch: typeof fetch
 
@@ -130,6 +115,20 @@ export default class GoogleAnalytics implements IGoogleAnalytics {
       }
     )
   }
+
+  public pageView(
+    dl: null | undefined,
+    dh: string,
+    dp: string,
+    other?: GAParameters
+  ): Promise<boolean>
+
+  public pageView(
+    dl: string,
+    dh?: string,
+    dp?: string,
+    other?: GAParameters
+  ): Promise<boolean>
 
   public pageView(
     dl: string | null | undefined,

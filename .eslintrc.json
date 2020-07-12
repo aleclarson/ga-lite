@@ -19,13 +19,19 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "plugins": ["@typescript-eslint"],
   "rules": {
-    "@typescript-eslint/member-delimiter-style": ["error", { "multiline": { "delimiter": "none", "requireLast": false }, "singleline": { "delimiter": "comma" } }],
+    "@typescript-eslint/member-delimiter-style": [
+      "error",
+      {
+        "multiline": { "delimiter": "none", "requireLast": false },
+        "singleline": { "delimiter": "comma" }
+      }
+    ],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/interface-name-prefix": "off"
+    "@typescript-eslint/interface-name-prefix": "off",
+    "comma-dangle": "off",
+    "space-before-function-paren": "off"
   }
 }

@@ -1,5 +1,6 @@
 export const random = (i: number) => Math.random().toString(16).substr(2, i)
-export const genUUID = () => `${random(8)}-${random(4)}-${random(4)}-${random(4)}-${random(12)}`
+export const genUUID = () =>
+  `${random(8)}-${random(4)}-${random(4)}-${random(4)}-${random(12)}`
 
 export interface GAAllParameters {
   [key: string]: string | number | boolean | undefined | string[]
@@ -59,8 +60,18 @@ export interface GAAllParameters {
 export type GAParameters = Omit<GAAllParameters, 'v' | 'tid' | 'cid'>
 
 interface IGoogleAnalytics {
-  pageView (dl: null | undefined, dh: string, dp: string, other?: GAParameters): Promise<boolean>
-  pageView (dl: string, dh?: string, dp?: string, other?: GAParameters): Promise<boolean>
+  pageView(
+    dl: null | undefined,
+    dh: string,
+    dp: string,
+    other?: GAParameters
+  ): Promise<boolean>
+  pageView(
+    dl: string,
+    dh?: string,
+    dp?: string,
+    other?: GAParameters
+  ): Promise<boolean>
 }
 
 /**
@@ -70,7 +81,7 @@ export default class GoogleAnalytics implements IGoogleAnalytics {
   public defaultValues: GAAllParameters
   private readonly fetch: typeof fetch
 
-  constructor (
+  constructor(
     tid: string,
     cid = genUUID(),
     fetcher?: typeof fetch,
@@ -80,7 +91,7 @@ export default class GoogleAnalytics implements IGoogleAnalytics {
     this.defaultValues = { v: 1, tid, cid }
   }
 
-  public genSearchParams (data: GAParameters) {
+  public genSearchParams(data: GAParameters) {
     const body = new URLSearchParams()
     const d = { ...this.defaultValues, ...data }
     for (const key in d) {
@@ -106,33 +117,45 @@ export default class GoogleAnalytics implements IGoogleAnalytics {
     return body
   }
 
-  public post (data: GAParameters) {
-    return this
-      .fetch(this.root, {
-        method: 'POST',
-        cache: 'no-cache',
-        body: this.genSearchParams(data).toString().replace(/%25/g, '%')
-      })
-      .then(it => it.ok, e => {
+  public post(data: GAParameters) {
+    return this.fetch(this.root, {
+      method: 'POST',
+      cache: 'no-cache',
+      body: this.genSearchParams(data).toString().replace(/%25/g, '%'),
+    }).then(
+      (it) => it.ok,
+      (e) => {
         console.error(e)
         return false
-      })
+      }
+    )
   }
 
-  public pageView (dl: string | null | undefined, dh?: string, dp?: string, other?: GAParameters) {
+  public pageView(
+    dl: string | null | undefined,
+    dh?: string,
+    dp?: string,
+    other?: GAParameters
+  ) {
     if (dl == null) dl = undefined
     return this.post({ ...other, dl, dh, dp })
   }
 
-  public event (ec: string, ea: string, el?: string, ev?: number, other?: GAParameters) {
+  public event(
+    ec: string,
+    ea: string,
+    el?: string,
+    ev?: number,
+    other?: GAParameters
+  ) {
     return this.post({ ...other, ec, ea, el, ev })
   }
 
-  public exception (exd?: string, exf?: boolean, other?: GAParameters) {
+  public exception(exd?: string, exf?: boolean, other?: GAParameters) {
     return this.post({ ...other, exd, exf })
   }
 
-  public social (sn: string, sa: string, st: string, other?: GAParameters) {
+  public social(sn: string, sa: string, st: string, other?: GAParameters) {
     return this.post({ ...other, sn, sa, st })
   }
 }

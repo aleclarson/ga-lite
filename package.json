@@ -5,7 +5,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "del-cli dist",
-    "build": "yon clean && tsc && tsc --outDir dist/esnext -t ESNEXT",
+    "build": "yon clean && tsc -p .",
     "lint": "eslint index.ts",
     "prepare": "yon build",
     "prepublishOnly": "yon lint"

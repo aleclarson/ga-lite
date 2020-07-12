@@ -2,13 +2,10 @@ const random = (i: number) => Math.random().toString(16).substr(2, i)
 const genUUID = () =>
   `${random(8)}-${random(4)}-${random(4)}-${random(4)}-${random(12)}`
 
-export interface GAAllParameters {
+export interface GAParameters {
   [key: string]: string | number | boolean | undefined | string[]
 
   t?: string
-  readonly v: number
-  readonly tid: string
-  readonly cid: string
   uid?: string
 
   sc?: 'start' | 'end'
@@ -58,34 +55,44 @@ export interface GAAllParameters {
   cg5?: string[]
 }
 
-export type GAParameters = Omit<GAAllParameters, 'v' | 'tid' | 'cid'>
+export interface GAOptions {
+  baseURL?: string
+  fetch?: typeof fetch
+}
 
 /**
  * https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
  */
 export class GoogleAnalytics {
-  defaultValues: GAAllParameters
+  readonly opts: Readonly<Required<GAOptions>>
+  /** Default search parameters for every request */
+  readonly params: GAParameters & {
+    readonly v: number
+    readonly tid: string
+    readonly cid: string
+  }
 
-  constructor(
-    tid: string,
-    cid = genUUID(),
-    private readonly baseURL = 'https://www.google-analytics.com/collect'
-  ) {
-    this.defaultValues = { v: 1, tid, cid }
+  constructor(tid: string, cid = genUUID(), opts: GAOptions = {}) {
+    const {
+      baseURL = 'https://www.google-analytics.com/collect',
+      fetch = globalThis.fetch,
+    } = opts
+
+    this.opts = { baseURL, fetch }
+    this.params = { v: 1, tid, cid }
   }
 
   genSearchParams(data: GAParameters) {
     const body = new URLSearchParams()
-    const d = { ...this.defaultValues, ...data }
+    const d = { ...this.params, ...data }
+
     for (const key in d) {
       let value = d[key]
+
       if (key.startsWith('cg')) {
         value = Array.isArray(value) ? value.join('/') : undefined
-      } else {
-        switch (key) {
-          default:
-        }
       }
+
       switch (typeof value) {
         case 'boolean':
           body.append(key, (+value).toString())
@@ -101,7 +108,9 @@ export class GoogleAnalytics {
   }
 
   post(data: GAParameters) {
-    return fetch(this.baseURL, {
+    const { fetch, baseURL } = this.opts
+
+    return fetch(baseURL, {
       method: 'POST',
       cache: 'no-cache',
       body: this.genSearchParams(data).toString().replace(/%25/g, '%'),

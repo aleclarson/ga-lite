@@ -4,12 +4,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "npm run lint",
     "clean": "del-cli dist",
-    "build": "npm run clean && tsc && tsc --outDir dist/esnext -t ESNEXT",
+    "build": "yon clean && tsc && tsc --outDir dist/esnext -t ESNEXT",
     "lint": "eslint index.ts",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run lint"
+    "prepare": "yon build",
+    "prepublishOnly": "yon lint"
   },
   "files": ["dist"],
   "husky": {
@@ -42,6 +41,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "husky": "^4.0.9",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.4",
+    "yarn-or-npm": "^3.0.1"
   }
 }

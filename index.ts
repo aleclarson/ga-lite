@@ -57,6 +57,7 @@ export interface GAAllParameters {
   cg4?: string[]
   cg5?: string[]
 }
+
 export type GAParameters = Omit<GAAllParameters, 'v' | 'tid' | 'cid'>
 
 /**

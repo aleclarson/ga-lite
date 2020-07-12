@@ -4,6 +4,8 @@ Fork of [google-analytics-lite](https://github.com/ShirasawaSama/google-analytic
 
 ## Changelog
 
+- **0.2.1**
+  - Use `tslib` for code reuse [(62a9d8c)](https://github.com/aleclarson/ga-lite/commit/62a9d8cc5b1c6f018b5391dbcb9a247c8920b58d)
 - **0.2.0**
   - Remove `random` and `getUUID` exports [(e12c8a6)](https://github.com/aleclarson/ga-lite/commit/e12c8a6c8ce07d73b446168166d86bcd72341558)
   - Rename `default` export to `GoogleAnalytics` [(ec77a0e)](https://github.com/aleclarson/ga-lite/commit/ec77a0e542c05d900580448c519839661085d10f)

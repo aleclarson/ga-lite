@@ -4,7 +4,7 @@ Fork of [google-analytics-lite](https://github.com/ShirasawaSama/google-analytic
 
 ## Changelog
 
-- **next**
+- **0.2.0**
   - Remove `random` and `getUUID` exports [(e12c8a6)](https://github.com/aleclarson/ga-lite/commit/e12c8a6c8ce07d73b446168166d86bcd72341558)
   - Rename `default` export to `GoogleAnalytics` [(ec77a0e)](https://github.com/aleclarson/ga-lite/commit/ec77a0e542c05d900580448c519839661085d10f)
   - Remove `Object.assign` polyfill [(22bb893)](https://github.com/aleclarson/ga-lite/commit/22bb893ac97239fa67fa5b5b4cc1a5002b590543)

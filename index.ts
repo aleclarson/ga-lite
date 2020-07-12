@@ -56,6 +56,7 @@ export interface GAParameters {
 export interface GAOptions {
   baseURL?: string
   fetch?: typeof fetch
+  shouldSend?: (data: GAParameters) => boolean | Promise<boolean>
 }
 
 /**
@@ -74,9 +75,10 @@ export class GoogleAnalytics {
     const {
       baseURL = 'https://www.google-analytics.com/collect',
       fetch = globalThis.fetch,
+      shouldSend = () => true,
     } = opts
 
-    this.opts = { baseURL, fetch }
+    this.opts = { baseURL, fetch, shouldSend }
     this.params = {
       v: 1,
       tid,
@@ -149,19 +151,25 @@ export class GoogleAnalytics {
   }
 
   post(data: GAParameters) {
-    const { fetch, baseURL } = this.opts
+    const { fetch, baseURL, shouldSend } = this.opts
 
-    return fetch(baseURL, {
-      method: 'POST',
-      cache: 'no-cache',
-      body: this.genSearchParams(data).toString().replace(/%25/g, '%'),
-    }).then(
-      (it) => it.ok,
-      (e) => {
-        console.error(e)
-        return false
-      }
-    )
+    return Promise.resolve()
+      .then(() => shouldSend(data))
+      .then(
+        (sending) =>
+          sending &&
+          fetch(baseURL, {
+            method: 'POST',
+            cache: 'no-cache',
+            body: this.genSearchParams(data).toString().replace(/%25/g, '%'),
+          }).then(
+            (res) => res.ok,
+            (e) => {
+              console.error(e)
+              return false
+            }
+          )
+      )
   }
 
   genSearchParams(data: GAParameters) {

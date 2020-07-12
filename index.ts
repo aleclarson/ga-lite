@@ -56,7 +56,7 @@ export interface GAParameters {
 export interface GAOptions {
   baseURL?: string
   fetch?: typeof fetch
-  shouldSend?: (data: GAParameters) => boolean | Promise<boolean>
+  shouldSend?: (params: GAParameters) => boolean | Promise<boolean>
 }
 
 /**
@@ -90,24 +90,24 @@ export class GoogleAnalytics {
     dl: null | undefined,
     dh: string,
     dp: string,
-    other?: GAParameters
+    params?: GAParameters
   ): Promise<boolean>
 
   pageView(
     dl: string,
     dh?: string,
     dp?: string,
-    other?: GAParameters
+    params?: GAParameters
   ): Promise<boolean>
 
   pageView(
     dl: string | null | undefined,
     dh?: string,
     dp?: string,
-    other?: GAParameters
+    params?: GAParameters
   ) {
     if (dl == null) dl = undefined
-    return this.post({ ...other, dl, dh, dp })
+    return this.post({ ...params, dl, dh, dp })
   }
 
   event(
@@ -115,54 +115,54 @@ export class GoogleAnalytics {
     ea: string,
     el?: string,
     ev?: number,
-    other?: GAParameters
+    params?: GAParameters
   ): Promise<boolean>
 
   event(
     ec: string,
     ea: string,
     el?: string,
-    other?: GAParameters
+    params?: GAParameters
   ): Promise<boolean>
 
-  event(ec: string, ea: string, other?: GAParameters): Promise<boolean>
+  event(ec: string, ea: string, params?: GAParameters): Promise<boolean>
 
   event(
     ec: string,
     ea: string,
     el?: string | GAParameters,
     ev?: number | GAParameters,
-    other?: GAParameters
+    params?: GAParameters
   ) {
     if (el && typeof el !== 'string') {
-      ev = el = void (other = el)
+      ev = el = void (params = el)
     } else if (ev && typeof ev !== 'number') {
-      ev = void (other = ev)
+      ev = void (params = ev)
     }
-    return this.post({ ...other, ec, ea, el, ev })
+    return this.post({ ...params, ec, ea, el, ev })
   }
 
-  exception(exd?: string, exf?: boolean, other?: GAParameters) {
-    return this.post({ ...other, exd, exf })
+  exception(exd?: string, exf?: boolean, params?: GAParameters) {
+    return this.post({ ...params, exd, exf })
   }
 
-  social(sn: string, sa: string, st: string, other?: GAParameters) {
-    return this.post({ ...other, sn, sa, st })
+  social(sn: string, sa: string, st: string, params?: GAParameters) {
+    return this.post({ ...params, sn, sa, st })
   }
 
-  post(data: GAParameters) {
+  post(params: GAParameters) {
     const { fetch, baseURL, shouldSend } = this.opts
-    data = { ...this.params, ...data }
+    params = { ...this.params, ...params }
 
     return Promise.resolve()
-      .then(() => shouldSend(data))
+      .then(() => shouldSend(params))
       .then(
         (sending) =>
           sending &&
           fetch(baseURL, {
             method: 'POST',
             cache: 'no-cache',
-            body: encodeSearchParams(data),
+            body: encodeSearchParams(params),
           }).then(
             (res) => res.ok,
             (e) => {

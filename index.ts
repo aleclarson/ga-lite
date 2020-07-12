@@ -65,15 +65,12 @@ export type GAParameters = Omit<GAAllParameters, 'v' | 'tid' | 'cid'>
  */
 export class GoogleAnalytics {
   defaultValues: GAAllParameters
-  private readonly fetch: typeof fetch
 
   constructor(
     tid: string,
     cid = genUUID(),
-    fetcher?: typeof fetch,
     private readonly baseURL = 'https://www.google-analytics.com/collect'
   ) {
-    this.fetch = fetcher || fetch
     this.defaultValues = { v: 1, tid, cid }
   }
 
@@ -104,7 +101,7 @@ export class GoogleAnalytics {
   }
 
   post(data: GAParameters) {
-    return this.fetch(this.baseURL, {
+    return fetch(this.baseURL, {
       method: 'POST',
       cache: 'no-cache',
       body: this.genSearchParams(data).toString().replace(/%25/g, '%'),

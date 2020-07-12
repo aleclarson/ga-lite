@@ -62,7 +62,7 @@ export type GAParameters = Omit<GAAllParameters, 'v' | 'tid' | 'cid'>
 /**
  * https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
  */
-export default class GoogleAnalytics {
+export class GoogleAnalytics {
   defaultValues: GAAllParameters
   private readonly fetch: typeof fetch
 

@@ -1,5 +1,6 @@
 dependencies:
   '@lukeed/uuid': 1.0.1
+  tslib: 2.0.0
 devDependencies:
   '@typescript-eslint/eslint-plugin': 2.34.0_3787943315ebc5ea524d5c102dc9e452
   '@typescript-eslint/parser': 2.34.0_eslint@6.8.0+typescript@3.9.6
@@ -1992,6 +1993,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-i/6DQjL8Xf3be4K/E6Wgpekn5Qasl1usyw++dAA35Ue5orEn65VIxOA+YvNNl9HV3qv70T7CNwjODHZrLwvd1Q==
+  /tslib/2.0.0:
+    dev: false
+    resolution:
+      integrity: sha512-lTqkx847PI7xEDYJntxZH89L2/aXInsyF2luSafe/+0fHOMjlBNXdH6th7f70qxLDhul7KZK0zC8V5ZIyHl0/g==
   /tsutils/3.17.1_typescript@3.9.6:
     dependencies:
       tslib: 1.13.0
@@ -2126,5 +2131,6 @@ specifiers:
   eslint-plugin-standard: ^4.0.1
   husky: ^4.0.9
   prettier: ^2.0.5
+  tslib: ^2.0.0
   typescript: ^3.7.4
   yarn-or-npm: ^3.0.1

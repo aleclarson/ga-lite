@@ -1,6 +1,6 @@
 dependencies:
-  '@lukeed/uuid': 1.0.1
   tslib: 2.0.0
+  uid: 1.0.0
 devDependencies:
   '@typescript-eslint/eslint-plugin': 2.34.0_3787943315ebc5ea524d5c102dc9e452
   '@typescript-eslint/parser': 2.34.0_eslint@6.8.0+typescript@3.9.6
@@ -35,12 +35,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-i6rgnR/YgPEQzZZnbTHHuZdlE8qyoBNalD6F+q4vAFlcMEcqmkoG+mPqJYJCo63qPf74+Y1UZsl3l6f7/RIkmA==
-  /@lukeed/uuid/1.0.1:
-    dev: false
-    engines:
-      node: '>=8'
-    resolution:
-      integrity: sha512-shtopUGL/WuVicOTppRGDb2he9aGp+OF5EB11Xsbe3K4W6qN7HtK3F+ayNxcfbrG/SSL/Z9B+Xrb0Foz9x83gw==
   /@nodelib/fs.scandir/2.1.3:
     dependencies:
       '@nodelib/fs.stat': 2.0.3
@@ -2047,6 +2041,12 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-Pspx3oKAPJtjNwE92YS05HQoY7z2SFyOpHo9MqJor3BXAGNaPUs83CuVp9VISFkSjyRfiTpmKuAYGJB7S7hOxw==
+  /uid/1.0.0:
+    dev: false
+    engines:
+      node: '>=8'
+    resolution:
+      integrity: sha512-DYp36HDIRECMW0xmeyGSDSheURMbL7gy4DqINDUW5OSw7cot0pNRNvEtEji9nk1XVDZN/0lJ7myxacoTeU9oow==
   /uri-js/4.2.2:
     dependencies:
       punycode: 2.1.1
@@ -2119,7 +2119,6 @@ packages:
     resolution:
       integrity: sha512-fTiQP6WbDAh5QZAVdbMQkecZoahnbOjClTQhzv74WX5h2Uaidj1isf9FDes11TKtsZ0/ZVfZsqZ+O3x6aLERHQ==
 specifiers:
-  '@lukeed/uuid': ^1.0.1
   '@typescript-eslint/eslint-plugin': ^2.15.0
   '@typescript-eslint/parser': ^2.15.0
   del-cli: ^3.0.0
@@ -2133,4 +2132,5 @@ specifiers:
   prettier: ^2.0.5
   tslib: ^2.0.0
   typescript: ^3.7.4
+  uid: ^1.0.0
   yarn-or-npm: ^3.0.1

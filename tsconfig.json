@@ -3,6 +3,7 @@
     "lib": ["es2020", "dom"],
     "target": "es5",
     "module": "commonjs",
+    "esModuleInterop": true,
     "importHelpers": true,
     "declaration": true,
     "sourceMap": true,

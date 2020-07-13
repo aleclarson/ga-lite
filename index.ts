@@ -1,6 +1,4 @@
-const random = (i: number) => Math.random().toString(16).substr(2, i)
-const genUUID = () =>
-  `${random(8)}-${random(4)}-${random(4)}-${random(4)}-${random(12)}`
+import randomId from 'uid'
 
 export interface GAParameters {
   [key: string]: string | number | boolean | undefined | string[]
@@ -84,7 +82,7 @@ export class GoogleAnalytics {
     this.params = {
       v: 1,
       tid,
-      cid: genUUID(),
+      cid: randomId(),
     }
   }
 

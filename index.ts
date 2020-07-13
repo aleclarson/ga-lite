@@ -49,7 +49,7 @@ export class GoogleAnalytics {
     params?: GAParameters
   ) {
     if (dl == null) dl = undefined
-    return this.post({ ...params, dl, dh, dp })
+    return this.post({ ...params, t: 'pageview', dl, dh, dp })
   }
 
   event(
@@ -81,7 +81,7 @@ export class GoogleAnalytics {
     } else if (ev && typeof ev !== 'number') {
       ev = void (params = ev)
     }
-    return this.post({ ...params, ec, ea, el, ev })
+    return this.post({ ...params, t: 'event', ec, ea, el, ev })
   }
 
   post(params: GAParameters) {

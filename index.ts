@@ -137,14 +137,6 @@ export class GoogleAnalytics {
     return this.post({ ...params, ec, ea, el, ev })
   }
 
-  exception(exd?: string, exf?: boolean, params?: GAParameters) {
-    return this.post({ ...params, exd, exf })
-  }
-
-  social(sn: string, sa: string, st: string, params?: GAParameters) {
-    return this.post({ ...params, sn, sa, st })
-  }
-
   post(params: GAParameters) {
     params = { ...this.params, ...params }
 

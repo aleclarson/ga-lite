@@ -4,6 +4,8 @@ Fork of [google-analytics-lite](https://github.com/ShirasawaSama/google-analytic
 
 ## Changelog
 
+- **0.2.3**
+  - Stop using `@lukeed/uuid` for React Native compatibility [(4aa7051)](https://github.com/aleclarson/ga-lite/commit/4aa7051)
 - **0.2.2**
   - Stop using `URLSearchParams` for React Native compatibility [(b443793)](https://github.com/aleclarson/ga-lite/commit/b44379382a98f58b5468e56d35d074b4da2cb6db)
   - Add `shouldSend` option to constructor [(39579e7)](https://github.com/aleclarson/ga-lite/commit/39579e7623782a60bb6678d43a2163f23b1c48b3)

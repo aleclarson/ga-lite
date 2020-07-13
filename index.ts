@@ -54,8 +54,9 @@ export interface GAParameters {
 }
 
 export interface GAOptions {
-  baseURL?: string
+  debug?: boolean
   fetch?: typeof fetch
+  baseURL?: string
   shouldSend?: (params: GAParameters) => boolean | Promise<boolean>
 }
 
@@ -148,8 +149,11 @@ export class GoogleAnalytics {
     params = { ...this.params, ...params }
 
     const {
+      debug,
       fetch = globalThis.fetch,
-      baseURL = 'https://www.google-analytics.com/collect',
+      baseURL = `https://www.google-analytics.com/${
+        debug ? 'debug/' : ''
+      }collect`,
       shouldSend,
     } = this.opts
 
@@ -163,7 +167,22 @@ export class GoogleAnalytics {
             cache: 'no-cache',
             body: encodeSearchParams(params),
           }).then(
-            (res) => res.ok,
+            (res) => {
+              if (debug) {
+                res.json().then((data) =>
+                  data.hitParsingResult.some((res: any) => !res.valid)
+                    ? console.warn('[ga-lite] Invalid request:', {
+                        params,
+                        ...data,
+                      })
+                    : console.debug('[ga-lite] Accepted request:', {
+                        params,
+                        ...data,
+                      })
+                )
+              }
+              return res.ok
+            },
             (e) => {
               console.error(e)
               return false

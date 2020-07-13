@@ -63,7 +63,7 @@ export interface GAOptions {
  * https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
  */
 export class GoogleAnalytics {
-  readonly opts: Readonly<Required<GAOptions>>
+  readonly opts: GAOptions
   /** Default search parameters for every request */
   readonly params: GAParameters & {
     readonly v: number
@@ -72,13 +72,7 @@ export class GoogleAnalytics {
   }
 
   constructor(tid: string, opts: GAOptions = {}) {
-    const {
-      baseURL = 'https://www.google-analytics.com/collect',
-      fetch = globalThis.fetch,
-      shouldSend = () => true,
-    } = opts
-
-    this.opts = { baseURL, fetch, shouldSend }
+    this.opts = opts
     this.params = {
       v: 1,
       tid,
@@ -151,11 +145,16 @@ export class GoogleAnalytics {
   }
 
   post(params: GAParameters) {
-    const { fetch, baseURL, shouldSend } = this.opts
     params = { ...this.params, ...params }
 
+    const {
+      fetch = globalThis.fetch,
+      baseURL = 'https://www.google-analytics.com/collect',
+      shouldSend,
+    } = this.opts
+
     return Promise.resolve()
-      .then(() => shouldSend(params))
+      .then(() => !shouldSend || shouldSend(params))
       .then(
         (sending) =>
           sending &&

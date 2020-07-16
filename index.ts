@@ -1,5 +1,7 @@
 import randomId from 'uid'
 
+const isWeb = typeof window.document !== 'undefined'
+
 export interface GAOptions {
   debug?: boolean
   fetch?: typeof fetch
@@ -28,28 +30,15 @@ export class GoogleAnalytics {
     }
   }
 
-  pageView(
-    dl: null | undefined,
-    dh: string,
-    dp: string,
-    params?: GAParameters
-  ): Promise<boolean>
-
-  pageView(
-    dl: string,
-    dh?: string,
-    dp?: string,
-    params?: GAParameters
-  ): Promise<boolean>
-
-  pageView(
-    dl: string | null | undefined,
-    dh?: string,
-    dp?: string,
-    params?: GAParameters
-  ) {
-    if (dl == null) dl = undefined
-    return this.post({ ...params, t: 'pageview', dl, dh, dp })
+  pageView(path: string, params: GAParameters = {}) {
+    params.t = isWeb ? 'pageview' : 'screenview'
+    if (isWeb) {
+      params.dh = document.location.host
+      params.dp = path
+    } else {
+      params.cd = path
+    }
+    return this.post(params)
   }
 
   event(
@@ -311,6 +300,14 @@ export interface GAParameters {
   dp?: string
   /** The title of the page / document. */
   dt?: string
+  /**
+   * This parameter is optional on web properties, and required on mobile
+   * properties for screenview hits, where it is used for the 'Screen Name' of
+   * the screenview hit. On web properties, this will default to the unique URL
+   * of the page by either using the &dl parameter as-is or assembling it from
+   * &dh and &dp.
+   */
+  cd?: string
 
   /**
    * The ID of a clicked DOM element, used to disambiguate multiple links to

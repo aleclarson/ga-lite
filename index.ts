@@ -99,7 +99,7 @@ export class GoogleAnalytics {
             hitParsingResult: { valid: boolean }[]
           }
           json.hitParsingResult.some((res) => !res.valid)
-            ? console.warn('[ga-lite] Invalid request:', {
+            ? console.error('[ga-lite] Invalid request:', {
                 params,
                 ...json,
               })

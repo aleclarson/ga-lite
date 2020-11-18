@@ -4,7 +4,6 @@ const isWeb = typeof window.document !== 'undefined'
 
 export interface GAOptions {
   debug?: boolean
-  fetch?: typeof fetch
   baseURL?: string
   shouldSend?: (params: GAParameters) => boolean | Promise<boolean>
 }
@@ -73,50 +72,52 @@ export class GoogleAnalytics {
     return this.post({ ...params, t: 'event', ec, ea, el, ev })
   }
 
-  post(params: GAParameters) {
+  async post(params: GAParameters) {
     params = { ...this.params, ...params }
 
     const {
       debug,
-      fetch = globalThis.fetch,
       baseURL = `https://www.google-analytics.com/${
         debug ? 'debug/' : ''
       }collect`,
       shouldSend,
     } = this.opts
 
-    return Promise.resolve()
-      .then(() => !shouldSend || shouldSend(params))
-      .then(
-        (sending) =>
-          sending &&
-          fetch(baseURL, {
-            method: 'POST',
-            cache: 'no-cache',
-            body: encodeSearchParams(params),
-          }).then(
-            (res) => {
-              if (debug) {
-                res.json().then((data) =>
-                  data.hitParsingResult.some((res: any) => !res.valid)
-                    ? console.warn('[ga-lite] Invalid request:', {
-                        params,
-                        ...data,
-                      })
-                    : console.debug('[ga-lite] Accepted request:', {
-                        params,
-                        ...data,
-                      })
-                )
-              }
-              return res.ok
-            },
-            (e) => {
-              console.error(e)
-              return false
-            }
-          )
-      )
+    if (shouldSend && !(await shouldSend(params))) {
+      return false
+    }
+
+    const err = Error(`Network request failed (${baseURL})`)
+    return new Promise<boolean>((resolve) => {
+      const xhr = new XMLHttpRequest()
+      xhr.setRequestHeader('cache', 'no-cache')
+      xhr.responseType = debug ? 'json' : 'arraybuffer'
+
+      xhr.onload = () => {
+        if (debug) {
+          const json = xhr.response as {
+            hitParsingResult: { valid: boolean }[]
+          }
+          json.hitParsingResult.some((res) => !res.valid)
+            ? console.warn('[ga-lite] Invalid request:', {
+                params,
+                ...json,
+              })
+            : console.debug('[ga-lite] Accepted request:', {
+                params,
+                ...json,
+              })
+        }
+        resolve(true)
+      }
+      xhr.onerror = () => {
+        console.error(err)
+        resolve(false)
+      }
+
+      xhr.open('POST', baseURL)
+      xhr.send(encodeSearchParams(params))
+    })
   }
 }
 

@@ -90,6 +90,8 @@ export class GoogleAnalytics {
     const err = Error(`Network request failed (${baseURL})`)
     return new Promise<boolean>((resolve) => {
       const xhr = new XMLHttpRequest()
+
+      xhr.open('POST', baseURL)
       xhr.setRequestHeader('cache', 'no-cache')
       xhr.responseType = debug ? 'json' : 'arraybuffer'
 
@@ -110,12 +112,12 @@ export class GoogleAnalytics {
         }
         resolve(true)
       }
+
       xhr.onerror = () => {
         console.error(err)
         resolve(false)
       }
 
-      xhr.open('POST', baseURL)
       xhr.send(encodeSearchParams(params))
     })
   }

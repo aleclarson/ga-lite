@@ -4,6 +4,7 @@ const isWeb = typeof window.document !== 'undefined'
 
 export interface GAOptions {
   debug?: boolean
+  appName?: string
   baseURL?: string
   shouldSend?: (params: GAParameters) => boolean | Promise<boolean>
 }
@@ -36,6 +37,7 @@ export class GoogleAnalytics {
       params.dp = path
     } else {
       params.cd = path
+      params.an = this.opts.appName
     }
     return this.post(params)
   }

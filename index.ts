@@ -97,20 +97,31 @@ export class GoogleAnalytics {
       xhr.setRequestHeader('cache', 'no-cache')
       xhr.responseType = debug ? 'json' : 'arraybuffer'
 
+      interface ParserMessage {
+        description: string
+      }
+      interface HitParsingResult {
+        valid: boolean
+        parserMessage: ParserMessage[]
+      }
+      interface DebugResponse {
+        hitParsingResult: HitParsingResult[]
+      }
+
       xhr.onload = () => {
         if (debug) {
-          const json = xhr.response as {
-            hitParsingResult: { valid: boolean }[]
+          const failure = (xhr.response as DebugResponse).hitParsingResult.find(
+            (res) => !res.valid
+          )
+          if (failure) {
+            err.message =
+              '[ga-lite] Invalid request: ' +
+              failure.parserMessage[0].description
+
+            console.error(err, params)
+          } else {
+            console.debug('[ga-lite] Accepted request:', params)
           }
-          json.hitParsingResult.some((res) => !res.valid)
-            ? console.error('[ga-lite] Invalid request:', {
-                params,
-                ...json,
-              })
-            : console.debug('[ga-lite] Accepted request:', {
-                params,
-                ...json,
-              })
         }
         resolve(true)
       }

@@ -74,9 +74,12 @@ export class GoogleAnalytics {
     return this.post({ ...params, t: 'event', ec, ea, el, ev })
   }
 
-  async post(params: GAParameters) {
-    params = { ...this.params, ...params }
+  post(params: GAParameters) {
+    // Merge default parameters and cache a stack trace.
+    return this._post({ ...this.params, ...params }, Error())
+  }
 
+  private async _post(params: GAParameters, err: Error) {
     const {
       debug,
       baseURL = `https://www.google-analytics.com/${
@@ -89,7 +92,6 @@ export class GoogleAnalytics {
       return false
     }
 
-    const err = Error(`Network request failed (${baseURL})`)
     return new Promise<boolean>((resolve) => {
       const xhr = new XMLHttpRequest()
 
@@ -127,6 +129,7 @@ export class GoogleAnalytics {
       }
 
       xhr.onerror = () => {
+        err.message = 'Network request failed: ' + baseURL
         console.error(err)
         resolve(false)
       }
